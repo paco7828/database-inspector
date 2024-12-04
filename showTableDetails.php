@@ -5,7 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Table Details</title>
-    <link rel="stylesheet" href="tableDetailStyles.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        table,
+        th,
+        tr,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
 </head>
 
 <body>
@@ -55,9 +64,48 @@
         }
         echo "</table>";
     }
-    echo "<a href='connect.php'>Back</a>";
+    echo "<a id='backAnchor' href='connect.php'>Back</a>";
     ?>
+    <script src="backAnchor.js"></script>
+    <script>
+        const inputs = document.querySelectorAll("input:not([type='hidden']):not([type='submit'])");
+        const backAnchor = document.querySelector("#backAnchor");
+        let index = 0;
+        let isEditing = false;
+        inputs[0].focus();
 
+        document.addEventListener("keydown", (e) => {
+            switch (e.key) {
+                case "Control":
+                    isEditing = !isEditing;
+                    break;
+                default:
+                    if (!isEditing) {
+                        switch (e.key) {
+                            case "ArrowDown":
+                                index += 3;
+                                break;
+                            case "ArrowUp":
+                                index -= 3;
+                                break;
+                            case "ArrowLeft":
+                                index--;
+                                break;
+                            case "ArrowRight":
+                                index++;
+                                break;
+                        }
+                        if (index >= inputs.length) {
+                            index = 0;
+                        } else if (index < 0) {
+                            index = inputs.length - 1;
+                        }
+                        inputs[index].focus();
+                    }
+                    break;
+            }
+        });
+    </script>
 </body>
 
 </html>
