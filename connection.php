@@ -21,8 +21,8 @@
 
         public static function setCredentials()
         {
-            if (isset($_POST["servernameInput"], $_POST["usernameInput"], $_POST["passwordInput"], $_POST["dbnameInput"])) {
-                if (empty($_POST["servernameInput"]) || empty($_POST["usernameInput"]) || empty($_POST["passwordInput"]) || empty($_POST["dbnameInput"])) {
+            if (isset($_POST["servernameInput"], $_POST["usernameInput"], $_POST["dbnameInput"])) {
+                if (empty($_POST["servernameInput"]) || empty($_POST["usernameInput"]) || empty($_POST["dbnameInput"])) {
                     $_SESSION['error_message'] = "All fields are required!";
                     return;
                 }
@@ -53,7 +53,7 @@
         {
             self::setCredentials();
 
-            if (empty(self::$servername) || empty(self::$username) || empty(self::$password) || empty(self::$dbname)) {
+            if (empty(self::$servername) || empty(self::$username) || empty(self::$dbname)) {
                 echo "<div>Database credentials are missing or invalid. ";
                 echo "<a id='backAnchor' href='index.php'>Back</a></div>";
                 die();
@@ -69,7 +69,7 @@
             return $conn;
         }
     }
-
+    
     $conn = Connection::startConnection();
     ?>
     <script src="backAnchor.js"></script>

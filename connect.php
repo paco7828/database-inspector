@@ -7,17 +7,17 @@
     <title>Available tables</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        #container{
-            text-align: center;
-            margin-top: 15%;
-        }
+    #container {
+        text-align: center;
+        margin-top: 15%;
+    }
 
-        #tablesDiv {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-        }
+    #tablesDiv {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+    }
     </style>
 </head>
 
@@ -44,14 +44,56 @@
         } else {
             while ($row = $result->fetch_assoc()) {
                 echo "
-        <form action='showTableDetails.php' method='GET'>
-            <input type='submit' value='" . $row["table_name"] . "' name='tableName'>
-        </form>";
+                <form action='showTableDetails.php' method='GET'>
+                    <input type='hidden' name='tableName' value='" . $row["table_name"] . "'>
+                    <input type='submit' value='" . $row["table_name"] . "'>
+                </form>";
             }
-        }
+        }        
         echo "</div><a id='backAnchor' href='index.php'>Back</a>";
         ?>
         <script src="backAnchor.js"></script>
+        <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tableBtns = document.querySelectorAll("input[type='submit']");
+            let index = 0;
+            highlight(index);
+
+            document.addEventListener("keydown", (e) => {
+                switch (e.key) {
+                    case "ArrowRight":
+                        index++;
+                        break;
+                    case "ArrowLeft":
+                        index--;
+                        break;
+                    case "Enter":
+                        tableBtns[index].form.submit();
+                        break;
+                }
+
+                if (index < 0) {
+                    index = tableBtns.length - 1;
+                } else if (index > tableBtns.length - 1) {
+                    index = 0;
+                }
+
+                highlight(index);
+            });
+
+            function highlight(index) {
+                let colors = ["white", "green"];
+
+                tableBtns.forEach(btn => {
+                    btn.style.color = "";
+                    btn.style.backgroundColor = "";
+                });
+
+                tableBtns[index].style.color = colors[0];
+                tableBtns[index].style.backgroundColor = colors[1];
+            }
+        });
+        </script>
     </div>
 </body>
 
