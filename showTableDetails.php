@@ -33,6 +33,11 @@
     <?php
     require_once "connection/connection.php";
 
+    Connection::setCredentials();
+    Connection::setDatabaseName($_SESSION["db_credentials"]["dbname"]);
+
+    $conn = Connection::startConnection();
+
     if (isset($_GET["tableName"])) {
         $_SESSION["current_table"] = $_GET["tableName"];
     }
@@ -76,7 +81,7 @@
             $uniqueKeys[] = $ukRow['Column_name'];
         }
     }
-
+    
     $sql = "SELECT * FROM $tableName";
     $result = $conn->query($sql);
 

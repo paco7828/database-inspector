@@ -68,7 +68,7 @@
         <div id="createDbCreds">
             <form action="create/createDb.php" method="POST">
                 <h2>Create database</h2>
-                <input type="text" placeholder="Database name..." name="dbnameInput"><br>
+                <input type="text" autocomplete="off" placeholder="Database name..." name="dbnameInput"><br>
                 <select name="collationSelect" id="collationSelect">
                     <option value="" selected>Select collation</option>
                     <option value="utf8_hungarian_ci">utf8_hungarian_ci</option>

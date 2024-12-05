@@ -48,7 +48,7 @@
         } else {
             while ($row = $result->fetch_assoc()) {
                 echo "
-                <form action='../showTableDetails.php' method='GET'>
+                <form action='./showTableDetails.php' method='GET'>
                     <input type='hidden' name='tableName' value='" . $row["table_name"] . "'>
                     <input type='submit' value='" . $row["table_name"] . "'>
                 </form>";

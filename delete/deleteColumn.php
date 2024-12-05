@@ -11,6 +11,9 @@
     <?php
     require_once "../connection/connection.php";
 
+    $conn = Connection::startConnection();
+    Connection::setDatabaseName($_SESSION["db_credentials"]["dbname"]);
+
     $showBackLink = true;
 
     if (isset($_SESSION["current_table"]) && isset($_POST["delColumn"])) {
