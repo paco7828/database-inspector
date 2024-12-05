@@ -28,10 +28,14 @@
 
         echo "<h1>Choose a table</h1><div id='tablesDiv'>";
 
+        Connection::setCredentials();
+        Connection::setDatabaseName($_POST["dbnameInput"]);
+
         $servername = $_SESSION["db_credentials"]["servername"];
         $username = $_SESSION["db_credentials"]["username"];
         $password = $_SESSION["db_credentials"]["password"];
         $dbname = $_SESSION["db_credentials"]["dbname"];
+
         $conn = new mysqli($servername, $username, $password, $dbname);
 
         $sql = "SELECT table_name 
@@ -50,7 +54,7 @@
                 </form>";
             }
         }        
-        echo "</div><a id='backAnchor' href='index.php'>Back</a>";
+        echo "</div><a id='backAnchor' href='userPage.php'>Back</a>";
         ?>
         <script src="backAnchor.js"></script>
         <script>
