@@ -5,33 +5,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Table Details</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/style.css">
     <style>
-        table,
-        th,
-        tr,
-        td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
+    table,
+    th,
+    tr,
+    td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
 
-        #primaryKey {
-            background-color: yellow;
-        }
+    #primaryKey {
+        background-color: yellow;
+    }
 
-        .foreignKey {
-            background-color: gray;
-        }
+    .foreignKey {
+        background-color: gray;
+    }
 
-        .uniqueKey {
-            background-color: cyan;
-        }
+    .uniqueKey {
+        background-color: cyan;
+    }
     </style>
 </head>
 
 <body>
     <?php
-    require_once "connection.php";
+    require_once "connection/connection.php";
 
     if (isset($_GET["tableName"])) {
         $_SESSION["current_table"] = $_GET["tableName"];
@@ -109,7 +109,7 @@
             $rowId = $row[$primaryKey];
 
             echo "<tr>
-            <form method='POST' action='updateRow.php'>
+            <form method='POST' action='create/updateRow.php'>
                 <input type='hidden' name='row_id' value='" . htmlspecialchars($rowId) . "'>
                 <input type='hidden' name='tableNameInput' value='" . htmlspecialchars($tableName) . "'>";
 
@@ -120,7 +120,7 @@
             echo "<td><input type='submit' value='Confirm changes' name='update_row'></td>
             </form>
             <td>
-            <form method='POST' action='deleteRow.php' onsubmit='return confirm(\"Are you sure you want to delete this row?\");'>
+            <form method='POST' action='delete/deleteRow.php' onsubmit='return confirm(\"Are you sure you want to delete this row?\");'>
                 <input type='hidden' name='row_id' value='" . htmlspecialchars($rowId) . "'>
                 <input type='hidden' name='tableNameInput' value='" . htmlspecialchars($tableName) . "'>
                 <input type='submit' value='Delete' name='delete_row'>
@@ -133,7 +133,7 @@
     }
     ?>
 
-    <form method="POST" action="addColumn.php">
+    <form method="POST" action="create/addColumn.php">
         <input type="text" name="nameInput" id="nameInput" placeholder="Column name...">
         <select name="typeSelect" id="typeSelect">
             <option value="INT">INT</option>
@@ -210,7 +210,8 @@
         <input type="submit" value="Add new column">
     </form>
 
-    <form action="deleteColumn.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this column?')">
+    <form action="delete/deleteColumn.php" method="POST"
+        onsubmit="return confirm('Are you sure you want to delete this column?')">
         <select name="delColumn" id="delColumn">
             <option value="" selected>Select column name</option>
             <?php
@@ -227,56 +228,56 @@
         <input type="submit" value="Delete">
     </form>
 
-    <a id="backAnchor" href="connect.php">Back</a>
-    <script src="backAnchor.js"></script>
+    <a id="backAnchor" href="./connect.php">Back</a>
+    <script src="js/backAnchor.js"></script>
 
     <script>
-        const inputs = document.querySelectorAll("input:not([type='hidden']):not([type='submit']), select, textarea");
-        let index = 0;
-        let isEditing = false;
+    const inputs = document.querySelectorAll("input:not([type='hidden']):not([type='submit']), select, textarea");
+    let index = 0;
+    let isEditing = false;
 
-        const table = document.querySelector("table");
-        const rows = table.querySelectorAll("tr");
-        const firstRowCells = rows[0].querySelectorAll("th");
-        const columnCount = firstRowCells.length - 2;
+    const table = document.querySelector("table");
+    const rows = table.querySelectorAll("tr");
+    const firstRowCells = rows[0].querySelectorAll("th");
+    const columnCount = firstRowCells.length - 2;
 
-        if (inputs.length) {
-            inputs[index].focus();
+    if (inputs.length) {
+        inputs[index].focus();
 
-            document.addEventListener("keydown", (e) => {
-                switch (e.key) {
-                    case "Control":
-                        isEditing = !isEditing;
-                        break;
-                    default:
-                        if (!isEditing) {
-                            switch (e.key) {
-                                case "ArrowDown":
-                                    index += columnCount;
-                                    break;
-                                case "ArrowUp":
-                                    index -= columnCount;
-                                    break;
-                                case "ArrowLeft":
-                                    index--;
-                                    break;
-                                case "ArrowRight":
-                                    index++;
-                                    break;
-                            }
-
-                            if (index >= inputs.length) {
-                                index = 0;
-                            } else if (index < 0) {
-                                index = inputs.length - 1;
-                            }
-
-                            inputs[index].focus();
+        document.addEventListener("keydown", (e) => {
+            switch (e.key) {
+                case "Control":
+                    isEditing = !isEditing;
+                    break;
+                default:
+                    if (!isEditing) {
+                        switch (e.key) {
+                            case "ArrowDown":
+                                index += columnCount;
+                                break;
+                            case "ArrowUp":
+                                index -= columnCount;
+                                break;
+                            case "ArrowLeft":
+                                index--;
+                                break;
+                            case "ArrowRight":
+                                index++;
+                                break;
                         }
-                        break;
-                }
-            });
-        }
+
+                        if (index >= inputs.length) {
+                            index = 0;
+                        } else if (index < 0) {
+                            index = inputs.length - 1;
+                        }
+
+                        inputs[index].focus();
+                    }
+                    break;
+            }
+        });
+    }
     </script>
 
 </body>

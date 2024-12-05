@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Available tables</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/style.css">
     <style>
     #container {
         text-align: center;
@@ -24,7 +24,7 @@
 <body>
     <div id="container">
         <?php
-        require_once "connection.php";
+        require_once "connection/connection.php";
 
         echo "<h1>Choose a table</h1><div id='tablesDiv'>";
 
@@ -48,15 +48,15 @@
         } else {
             while ($row = $result->fetch_assoc()) {
                 echo "
-                <form action='showTableDetails.php' method='GET'>
+                <form action='../showTableDetails.php' method='GET'>
                     <input type='hidden' name='tableName' value='" . $row["table_name"] . "'>
                     <input type='submit' value='" . $row["table_name"] . "'>
                 </form>";
             }
         }        
-        echo "</div><a id='backAnchor' href='userPage.php'>Back</a>";
+        echo "</div><a id='backAnchor' href='./userPage.php'>Back</a>";
         ?>
-        <script src="backAnchor.js"></script>
+        <script src="js/backAnchor.js"></script>
         <script>
         document.addEventListener("DOMContentLoaded", () => {
             const tableBtns = document.querySelectorAll("input[type='submit']");

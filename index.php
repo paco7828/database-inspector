@@ -11,7 +11,7 @@
     <div id="container">
         <div id="constantCredentials">
             <h1>Log in with your credentials</h1>
-            <form action="userPage.php" method="POST">
+            <form action="./userPage.php" method="POST">
                 <input autocomplete="off" type="text" placeholder="Server name..." name="servernameInput"><br>
                 <input autocomplete="off" type="text" placeholder="Username..." name="usernameInput"><br>
                 <input autocomplete="off" type="text" placeholder="Password..." name="passwordInput"><br>
@@ -19,7 +19,7 @@
             </form>
         </div>
     </div>
-    <script src="simpleKeyNav.js"></script>
+    <script src="js/simpleKeyNav.js"></script>
 </body>
 
 </html>
