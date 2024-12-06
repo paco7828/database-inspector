@@ -26,14 +26,17 @@ class Connection
                 'username' => self::$username,
                 'password' => self::$password
             ];
-        } elseif (isset($_SESSION['db_credentials'])) {
-            self::$servername = $_SESSION['db_credentials']['servername'] ?? '';
-            self::$username = $_SESSION['db_credentials']['username'] ?? '';
-            self::$password = $_SESSION['db_credentials']['password'] ?? '';
-        } else {
-            header("Location: ../index.php");
-            exit;
+        } elseif (!isset($_SESSION['db_credentials'])) {
+            $_SESSION['db_credentials'] = [
+                'servername' => '',
+                'username' => '',
+                'password' => ''
+            ];
         }
+
+        self::$servername = $_SESSION['db_credentials']['servername'];
+        self::$username = $_SESSION['db_credentials']['username'];
+        self::$password = $_SESSION['db_credentials']['password'];
     }
 
     public static function setDatabaseName($dbname)
@@ -48,9 +51,7 @@ class Connection
         self::setCredentials();
 
         if (empty(self::$dbname)) {
-            echo "<div>Database name is missing. ";
-            echo "<a href='../index.php'>Back</a></div>";
-            die();
+            self::$dbname = $_SESSION["dbname"];
         }
 
         $conn = new mysqli(self::$servername, self::$username, self::$password, self::$dbname);

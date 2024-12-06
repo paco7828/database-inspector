@@ -12,6 +12,9 @@
 
     require_once "../connection/connection.php";
 
+    $conn = Connection::startConnection();
+    Connection::setDatabaseName($_SESSION["dbname"]);
+
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tableName = $_SESSION["current_table"];
         $columnName = $_POST["nameInput"];

@@ -7,25 +7,25 @@
     <title>Table Details</title>
     <link rel="stylesheet" href="styles/style.css">
     <style>
-    table,
-    th,
-    tr,
-    td {
-        border: 1px solid black;
-        border-collapse: collapse;
-    }
+        table,
+        th,
+        tr,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
 
-    #primaryKey {
-        background-color: yellow;
-    }
+        #primaryKey {
+            background-color: yellow;
+        }
 
-    .foreignKey {
-        background-color: gray;
-    }
+        .foreignKey {
+            background-color: gray;
+        }
 
-    .uniqueKey {
-        background-color: cyan;
-    }
+        .uniqueKey {
+            background-color: cyan;
+        }
     </style>
 </head>
 
@@ -34,7 +34,6 @@
     require_once "connection/connection.php";
 
     Connection::setCredentials();
-    Connection::setDatabaseName($_SESSION["db_credentials"]["dbname"]);
 
     $conn = Connection::startConnection();
 
@@ -51,11 +50,7 @@
     $primaryKeyQuery = "SHOW KEYS FROM $tableName WHERE Key_name = 'PRIMARY'";
     $primaryKeyResult = $conn->query($primaryKeyQuery);
 
-    if (!$primaryKeyResult || $primaryKeyResult->num_rows == 0) {
-        die("Could not retrieve the primary key for table $tableName");
-    }
-
-    $primaryKey = $primaryKeyResult->fetch_assoc()['Column_name'];
+    $primaryKey = $primaryKeyResult->fetch_assoc()['Column_name'] ?? null;
 
     $foreignKeyQuery = "
     SELECT COLUMN_NAME 
@@ -81,7 +76,7 @@
             $uniqueKeys[] = $ukRow['Column_name'];
         }
     }
-    
+
     $sql = "SELECT * FROM $tableName";
     $result = $conn->query($sql);
 
@@ -237,52 +232,52 @@
     <script src="js/backAnchor.js"></script>
 
     <script>
-    const inputs = document.querySelectorAll("input:not([type='hidden']):not([type='submit']), select, textarea");
-    let index = 0;
-    let isEditing = false;
+        const inputs = document.querySelectorAll("input:not([type='hidden']):not([type='submit']), select, textarea");
+        let index = 0;
+        let isEditing = false;
 
-    const table = document.querySelector("table");
-    const rows = table.querySelectorAll("tr");
-    const firstRowCells = rows[0].querySelectorAll("th");
-    const columnCount = firstRowCells.length - 2;
+        const table = document.querySelector("table");
+        const rows = table.querySelectorAll("tr");
+        const firstRowCells = rows[0].querySelectorAll("th");
+        const columnCount = firstRowCells.length - 2;
 
-    if (inputs.length) {
-        inputs[index].focus();
+        if (inputs.length) {
+            inputs[index].focus();
 
-        document.addEventListener("keydown", (e) => {
-            switch (e.key) {
-                case "Control":
-                    isEditing = !isEditing;
-                    break;
-                default:
-                    if (!isEditing) {
-                        switch (e.key) {
-                            case "ArrowDown":
-                                index += columnCount;
-                                break;
-                            case "ArrowUp":
-                                index -= columnCount;
-                                break;
-                            case "ArrowLeft":
-                                index--;
-                                break;
-                            case "ArrowRight":
-                                index++;
-                                break;
+            document.addEventListener("keydown", (e) => {
+                switch (e.key) {
+                    case "Control":
+                        isEditing = !isEditing;
+                        break;
+                    default:
+                        if (!isEditing) {
+                            switch (e.key) {
+                                case "ArrowDown":
+                                    index += columnCount;
+                                    break;
+                                case "ArrowUp":
+                                    index -= columnCount;
+                                    break;
+                                case "ArrowLeft":
+                                    index--;
+                                    break;
+                                case "ArrowRight":
+                                    index++;
+                                    break;
+                            }
+
+                            if (index >= inputs.length) {
+                                index = 0;
+                            } else if (index < 0) {
+                                index = inputs.length - 1;
+                            }
+
+                            inputs[index].focus();
                         }
-
-                        if (index >= inputs.length) {
-                            index = 0;
-                        } else if (index < 0) {
-                            index = inputs.length - 1;
-                        }
-
-                        inputs[index].focus();
-                    }
-                    break;
-            }
-        });
-    }
+                        break;
+                }
+            });
+        }
     </script>
 
 </body>

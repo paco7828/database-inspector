@@ -1,10 +1,17 @@
 -Connect to database (OK)
     -connect to table (OK)
-        -change data ()
-        -delete row ()
-        -create new column ()
-        -delete existing column ()-
+        -change data (OK)
+        -delete row (OK)
+        -create new column (OK)
+        -delete existing column (OK)
+-features
+    -delete table
+    -create table
+    -rename table
 
-Error:
-    -pressing back button while on showTableDetails.php => returns user to the connect.php --> Undefined array key "dbnameInput"
-        -fix => when visiting connect.php the dbnameInput's value is read first but not the session value
+    -rename database
+
+    -rename column
+    
+    -remove key from column
+    -add key to column

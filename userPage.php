@@ -13,9 +13,15 @@
 
     Connection::setCredentials();
 
-    $servername = $_SESSION['db_credentials']['servername'];
-    $username = $_SESSION['db_credentials']['username'];
-    $password = $_SESSION['db_credentials']['password'];
+    if (isset($_SESSION['db_credentials'])) {
+        $servername = $_SESSION['db_credentials']['servername'];
+        $username = $_SESSION['db_credentials']['username'];
+        $password = $_SESSION['db_credentials']['password'];
+    } else {
+        echo "<div>Database credentials are missing. ";
+        echo "<a href='./index.php'>Back</a></div>";
+        exit();
+    }
 
     $conn = new mysqli($servername, $username, $password);
 
@@ -28,8 +34,8 @@
     $existingDatabases = [];
     $sql = "SHOW DATABASES";
     $result = $conn->query($sql);
-    if($result){
-        while($row = $result->fetch_assoc()){
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
             array_push($existingDatabases, $row["Database"]);
         }
     }
@@ -42,7 +48,7 @@
                 <select name="dbnameInput" id="dbnameInput">
                     <?php
                     echo "<option value=''>Select database</option>";
-                    foreach($existingDatabases as $db){
+                    foreach ($existingDatabases as $db) {
                         echo "<option value='$db'>$db</option>";
                     }
                     ?>
@@ -57,7 +63,7 @@
                 <select name="dbnameInput" id="dbnameInput">
                     <?php
                     echo "<option value=''>Select database</option>";
-                    foreach($existingDatabases as $db){
+                    foreach ($existingDatabases as $db) {
                         echo "<option value='$db'>$db</option>";
                     }
                     ?>

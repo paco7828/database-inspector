@@ -2,6 +2,8 @@
 
 require_once "../connection/connection.php";
 
+$conn = Connection::startConnection();
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_row'])) {
     $id = intval($_POST['row_id']);
     $tableName = $_POST['tableNameInput'];
