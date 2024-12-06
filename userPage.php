@@ -30,48 +30,29 @@
         echo "<a href='./index.php'>Back</a></div>";
         exit();
     }
-
-    $existingDatabases = [];
-    $sql = "SHOW DATABASES";
-    $result = $conn->query($sql);
-    if ($result) {
-        while ($row = $result->fetch_assoc()) {
-            array_push($existingDatabases, $row["Database"]);
-        }
-    }
     ?>
 
     <div id="container">
-        <div id="connectCreds">
+        <div id="connectDbDiv">
             <form action="./connect.php" method="POST">
-                <h1>Enter database credentials</h1>
+                <h2>Enter database credentials</h2>
                 <select name="dbnameInput" id="dbnameInput">
-                    <?php
-                    echo "<option value=''>Select database</option>";
-                    foreach ($existingDatabases as $db) {
-                        echo "<option value='$db'>$db</option>";
-                    }
-                    ?>
+                    <?php include "loadDbs.php"; ?>
                 </select><br>
                 <input type="submit" value="Connect!">
             </form>
         </div>
-        <div id="deleteDbCreds">
+        <div id="deleteDbDiv">
             <form action="delete/deleteDb.php" method="POST"
                 onsubmit="return confirm('Are you sure you want to delete this database?');">
                 <h2>Delete database</h2>
                 <select name="dbnameInput" id="dbnameInput">
-                    <?php
-                    echo "<option value=''>Select database</option>";
-                    foreach ($existingDatabases as $db) {
-                        echo "<option value='$db'>$db</option>";
-                    }
-                    ?>
+                    <?php include "loadDbs.php"; ?>
                 </select><br>
                 <input type="submit" value="Delete!">
             </form>
         </div>
-        <div id="createDbCreds">
+        <div id="createDbDiv">
             <form action="create/createDb.php" method="POST">
                 <h2>Create database</h2>
                 <input type="text" autocomplete="off" placeholder="Database name..." name="dbnameInput"><br>

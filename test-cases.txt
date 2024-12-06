@@ -1,17 +1,5 @@
--Connect to database (OK)
-    -connect to table (OK)
-        -change data (OK)
-        -delete row (OK)
-        -create new column (OK)
-        -delete existing column (OK)
 -features
-    -delete table
     -create table
-    -rename table
-
-    -rename database
-
-    -rename column
-    
     -remove key from column
     -add key to column
+    -instead of "die()" function, create error flags => set error flag to true if error => if error flag true => echo backAnchor anchor element

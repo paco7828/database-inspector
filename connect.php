@@ -49,29 +49,64 @@
         }
 
         $sql = "SELECT table_name 
-        FROM information_schema.tables 
-        WHERE table_schema = '$dbname'";
+                FROM information_schema.tables 
+                WHERE table_schema = '$dbname'";
         $result = $conn->query($sql);
 
         if (!$result) {
             die("An error has occurred: $conn->error");
         }
 
-        echo "<h1>Choose a table</h1><div id='tablesDiv'>";
+        echo "<h1>Choose a table</h1>
+              <div id='tablesDiv'>
+              <form action='' method='POST'>
+                  <select name='tableNameInput' required>";
 
         while ($row = $result->fetch_assoc()) {
-            echo "
-    <form action='./showTableDetails.php' method='GET'>
-        <input type='hidden' name='tableName' value='" . htmlspecialchars($row["table_name"]) . "'>
-        <input type='submit' value='" . htmlspecialchars($row["table_name"]) . "'>
-    </form>";
+            echo "<option value='" . htmlspecialchars($row["table_name"]) . "'>" . htmlspecialchars($row["table_name"]) . "</option>";
         }
 
-        echo "</div><a id='backAnchor' href='./userPage.php'>Back</a>";
+        echo "  </select>
+                  <div id='actionButtons'>
+                      <label>
+                          <input type='radio' name='action' value='connect' required> Connect to table
+                      </label>
+                      <label>
+                          <input type='radio' name='action' value='rename'> Rename table
+                      </label>
+                      <label>
+                          <input type='radio' name='action' value='delete'> Delete table
+                      </label>
+                  </div>
+                  <input type='submit' value='Submit'>
+              </form>
+              </div>";
+        ?>
+        <a id='backAnchor' href='./userPage.php'>Back</a>
+        <script src="js/backAnchor.js"></script>
+        <?php
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['tableNameInput']) && isset($_POST['action'])) {
+                $tableName = $_POST['tableNameInput'];
+                $action = $_POST['action'];
+                switch ($action) {
+                    case 'connect':
+                        header("Location: ./showTableDetails.php?tableName=" . urlencode($tableName));
+                        exit;
+                    case 'rename':
+                        header("Location: create/renameTable.php?tableName=" . urlencode($tableName));
+                        exit;
+                    case 'delete':
+                        header("Location: delete/deleteTable.php?tableName=" . urlencode($tableName));
+                        exit;
+                    default:
+                        echo "<p style='color: red;'>Invalid action selected!</p>";
+                }
+            }
+        }
         ?>
 
-        <script src="js/backAnchor.js"></script>
-        <script>
+        <!-- <script> 
             document.addEventListener("DOMContentLoaded", () => {
                 const tableBtns = document.querySelectorAll("input[type='submit']");
                 let index = 0;
@@ -112,6 +147,7 @@
                 }
             });
         </script>
+        -->
     </div>
 </body>
 

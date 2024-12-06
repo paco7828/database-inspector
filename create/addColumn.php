@@ -27,53 +27,60 @@
         $autoIncrement = isset($_POST["autoIncCheckbox"]) ? "AUTO_INCREMENT" : "";
         $comment = $_POST["commentInput"];
 
-        if (!empty($columnName) || !empty($columnType) || !empty($columnLength)) {
-            $sql = "ALTER TABLE $tableName
-                ADD COLUMN $columnName $columnType($columnLength) ";
+        if (!empty($columnName) && !empty($columnType)) {
+            $sql = "ALTER TABLE `$tableName` ADD COLUMN `$columnName` $columnType";
 
-            if (!empty($collation)) {
-                $charset = explode("_", $collation);
-                $sql .= "CHARACTER SET $charset[0] COLLATE $collation ";
+            if (!empty($columnLength)) {
+                $sql .= "($columnLength)";
             }
+
+            $stringTypes = ['CHAR', 'VARCHAR', 'TEXT', 'TINYTEXT', 'MEDIUMTEXT', 'LONGTEXT'];
+            if (in_array(strtoupper($columnType), $stringTypes) && !empty($collation)) {
+                $charset = explode("_", $collation);
+                $sql .= " CHARACTER SET $charset[0] COLLATE $collation";
+            }
+
+            $sql .= " $isNull";
 
             if (!empty($defaultValue)) {
-                $sql .= "DEFAULT '$defaultValue' ";
+                $sql .= " DEFAULT ";
+                $sql .= ($defaultValue === "NULL" || $defaultValue === "CURRENT_TIMESTAMP")
+                    ? $defaultValue
+                    : "'$defaultValue'";
             }
 
-            $sql .= $isNull;
-
             if (!empty($autoIncrement)) {
-                $sql .= "AUTO_INCREMENT ";
+                $sql .= " $autoIncrement";
             }
 
             if (!empty($comment)) {
-                $sql .= "COMMENT '$comment' ";
+                $sql .= " COMMENT '$comment'";
             }
 
             if (!empty($indexKey)) {
                 $sql .= match ($indexKey) {
-                    'PRIMARY' => ", ADD PRIMARY KEY ($columnName)",
-                    'UNIQUE' => ", ADD UNIQUE KEY ($columnName)",
-                    'INDEX' => ", ADD INDEX $columnName ($columnName)",
-                    'FULLTEXT' => ", ADD FULLTEXT ($columnName)",
-                    'SPATIAL' => ", ADD SPATIAL INDEX $columnName ($columnName)",
+                    'PRIMARY' => ", ADD PRIMARY KEY (`$columnName`)",
+                    'UNIQUE' => ", ADD UNIQUE KEY (`$columnName`)",
+                    'INDEX' => ", ADD INDEX `$columnName` (`$columnName`)",
+                    'FULLTEXT' => ", ADD FULLTEXT (`$columnName`)",
+                    'SPATIAL' => ", ADD SPATIAL INDEX `$columnName` (`$columnName`)",
                     default => ''
                 };
             }
 
-
             if ($conn->query($sql)) {
                 header("Location: ../showTableDetails.php");
             } else {
-                echo "Error: $conn->error";
+                echo "Error in query: $conn->error";
+                echo "<br><pre>$sql</pre>";
                 echo "<a id='backAnchor' href='../showTableDetails.php'>Back</a>";
             }
         } else {
-            die("Essential property left empty.");
+            die("Column name and type are required.");
         }
     }
-    ?>
 
+    ?>
 
     <script src="js/backAnchor.js"></script>
 </body>

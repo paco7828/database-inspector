@@ -210,22 +210,45 @@
         <input type="submit" value="Add new column">
     </form>
 
-    <form action="delete/deleteColumn.php" method="POST"
-        onsubmit="return confirm('Are you sure you want to delete this column?')">
-        <select name="delColumn" id="delColumn">
+    <form action="columnAction.php" method="POST">
+        <select name="selectedColumn" id="selectedColumn">
             <option value="" selected>Select column name</option>
             <?php
             $columnNamesQuery = "SHOW COLUMNS FROM $tableName";
             $columnQueryResult = $conn->query($columnNamesQuery);
             if (!$columnQueryResult) {
-                die("Error has occured while fetching column names: $conn->error");
+                die("Error has occurred while fetching column names: $conn->error");
             }
             while ($row = $columnQueryResult->fetch_assoc()) {
                 echo "<option value='" . htmlspecialchars($row["Field"]) . "'>" . htmlspecialchars($row["Field"]) . "</option>";
             }
             ?>
         </select>
-        <input type="submit" value="Delete">
+
+        <div>
+            <label>
+                <input type="radio" name="action" value="rename" required> Rename
+            </label>
+            <label>
+                <input type="radio" name="action" value="delete" required> Delete
+            </label>
+        </div>
+
+        <div id="renameField" style="display: none;">
+            <input type="text" name="newColumnName" placeholder="New column name">
+        </div>
+
+        <div id="keyOptions" style="display: none;">
+            <select name="keyType" id="keyType">
+                <option value="" selected>Select key type</option>
+                <option value="UNIQUE">Unique Key</option>
+                <option value="INDEX">Index</option>
+                <option value="FULLTEXT">Fulltext</option>
+                <option value="SPATIAL">Spatial</option>
+            </select>
+        </div>
+
+        <input type="submit" value="Submit!">
     </form>
 
     <a id="backAnchor" href="./connect.php">Back</a>
@@ -278,6 +301,21 @@
                 }
             });
         }
+
+        const actionRadios = document.querySelectorAll("input[name='action']");
+        const renameField = document.getElementById("renameField");
+
+        actionRadios.forEach(radio => {
+            radio.addEventListener("change", () => {
+                if (radio.value === "rename") {
+                    renameField.style.display = "block";
+                } else if (radio.value === "addOtherKey") {
+                    renameField.style.display = "none";
+                } else {
+                    renameField.style.display = "none";
+                }
+            });
+        });
     </script>
 
 </body>
