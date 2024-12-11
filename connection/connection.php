@@ -58,7 +58,7 @@ class Connection
 
         if ($conn->connect_error) {
             echo "<div>An error has occurred: $conn->connect_error. ";
-            echo "<a href='../index.php'>Back</a></div>";
+            echo "<a id='backAnchor' href='../index.php'>Esc</a></div>";
             die();
         }
 

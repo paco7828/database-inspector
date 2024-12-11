@@ -34,7 +34,7 @@
         }
 
         if ($conn->query($sql) === TRUE) {
-            echo "<h1>Database has been created successfully: $newDbname</h1>";
+            header("Location: ../userPage.php");
         } else {
             echo "<h1>Error creating database: $conn->error</h1>";
         }
@@ -42,8 +42,8 @@
         $conn->close();
     }
     ?>
-    <a id="backAnchor" href="../userPage.php">Back</a>
-    <script src="js/backAnchor.js"></script>
+    <a id="backAnchor" href="../userPage.php">Esc</a>
+    <script src="../js/backAnchor.js"></script>
 </body>
 
 </html>

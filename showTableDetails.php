@@ -6,30 +6,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Table Details</title>
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="styles/select.css">
+    <link rel="stylesheet" href="styles/radio.css">
+    <link rel="stylesheet" href="styles/table.css">
+    <link rel="stylesheet" href="styles/backAnchor.css">
     <style>
-        table,
-        th,
-        tr,
-        td {
-            border: 1px solid black;
-            border-collapse: collapse;
+        #container{
+            display: flex;
+            padding-top: 5%;
         }
 
-        #primaryKey {
-            background-color: yellow;
+        #addColForm{
+            position: absolute;
+            right: 10%;
+            bottom: 5%;
+            display: grid;
+            justify-content: center;
+            align-items: center;
         }
 
-        .foreignKey {
-            background-color: gray;
+        #addColForm input[type="submit"]{
+            margin-top: 5%;
         }
 
-        .uniqueKey {
-            background-color: cyan;
+        #columnActionForm{
+            position: absolute;
+            right: 10%;
+            top: 1%;
+        }
+
+        hr{
+            width: 25vh;
+            margin-top: 5%;
+        }
+
+        #renameField{
+            position: absolute;
+            top: 25%;
+            right: -50%;
         }
     </style>
 </head>
 
 <body>
+    <div id="container">
     <?php
     require_once "connection/connection.php";
 
@@ -47,11 +68,16 @@
         die("Table name not provided.");
     }
 
+    // Check for primary key
     $primaryKeyQuery = "SHOW KEYS FROM $tableName WHERE Key_name = 'PRIMARY'";
     $primaryKeyResult = $conn->query($primaryKeyQuery);
+    $primaryKey = null;
+    if ($primaryKeyResult && $primaryKeyResult->num_rows > 0) {
+        $primaryKeyRow = $primaryKeyResult->fetch_assoc();
+        $primaryKey = $primaryKeyRow['Column_name'] ?? null;
+    }
 
-    $primaryKey = $primaryKeyResult->fetch_assoc()['Column_name'] ?? null;
-
+    // Check for foreign keys
     $foreignKeyQuery = "
     SELECT COLUMN_NAME 
     FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
@@ -59,7 +85,6 @@
       AND TABLE_SCHEMA = DATABASE() 
       AND REFERENCED_TABLE_NAME IS NOT NULL";
     $foreignKeyResult = $conn->query($foreignKeyQuery);
-
     $foreignKeys = [];
     if ($foreignKeyResult && $foreignKeyResult->num_rows > 0) {
         while ($fkRow = $foreignKeyResult->fetch_assoc()) {
@@ -67,9 +92,9 @@
         }
     }
 
+    // Check for unique keys
     $uniqueKeyQuery = "SHOW KEYS FROM $tableName WHERE Non_unique = 0 AND Key_name != 'PRIMARY'";
     $uniqueKeyResult = $conn->query($uniqueKeyQuery);
-
     $uniqueKeys = [];
     if ($uniqueKeyResult && $uniqueKeyResult->num_rows > 0) {
         while ($ukRow = $uniqueKeyResult->fetch_assoc()) {
@@ -77,6 +102,7 @@
         }
     }
 
+    // Fetch table data
     $sql = "SELECT * FROM $tableName";
     $result = $conn->query($sql);
 
@@ -106,8 +132,7 @@
         </tr>";
 
         while ($row = $result->fetch_assoc()) {
-            $rowId = $row[$primaryKey];
-
+            $rowId = $primaryKey ? $row[$primaryKey] : reset($row);
             echo "<tr>
             <form method='POST' action='create/updateRow.php'>
                 <input type='hidden' name='row_id' value='" . htmlspecialchars($rowId) . "'>
@@ -117,7 +142,7 @@
                 echo "<td><input type='text' name='" . htmlspecialchars($key) . "' value='" . htmlspecialchars($val) . "'></td>";
             }
 
-            echo "<td><input type='submit' value='Confirm changes' name='update_row'></td>
+            echo "<td><input type='submit' value='Confirm' name='update_row'></td>
             </form>
             <td>
             <form method='POST' action='delete/deleteRow.php' onsubmit='return confirm(\"Are you sure you want to delete this row?\");'>
@@ -133,8 +158,9 @@
     }
     ?>
 
-    <form method="POST" action="create/addColumn.php">
+    <form method="POST" action="create/addColumn.php" id="addColForm">
         <input type="text" name="nameInput" id="nameInput" placeholder="Column name...">
+        <div>
         <select name="typeSelect" id="typeSelect">
             <option value="INT">INT</option>
             <option value="VARCHAR">VARCHAR</option>
@@ -179,12 +205,15 @@
 
         </select>
         <input type="number" id="lengthInput" name="lengthInput" placeholder="Length...">
-        <label for="defaultSelect">Default value</label>
-        <select name="defaultSelect" id="defaultSelect">
-            <option value="" selected>Nothing</option>
-            <option value="NULL">NULL</option>
-            <option value="CURRENT_TIMESTAMP">CURRENT_TIMESTAMP</option>
-        </select>
+        </div>
+        <div>
+            <label for="defaultSelect">Default value</label>
+            <select name="defaultSelect" id="defaultSelect">
+                <option value="" selected>Nothing</option>
+                <option value="NULL">NULL</option>
+                <option value="CURRENT_TIMESTAMP">CURRENT_TIMESTAMP</option>
+            </select>
+        </div>
         <select name="collationSelect" id="collationSelect">
             <option value="" selected>Collation</option>
             <option value="utf8_hungarian_ci">utf8_hungarian_ci</option>
@@ -193,24 +222,30 @@
             <option value="armscii8_general_nopad_ci">armscii8_general_nopad_ci</option>
             <option value="armscii8_nopad_bin">armscii8_nopad_bin</option>
         </select>
-        <label for="isNullCheckbox">Null?</label>
-        <input type="checkbox" id="isNullCheckbox" name="isNullCheckbox">
-        <label for="indexSelect">Index</label>
-        <select name="indexSelect" id="indexSelect">
-            <option value="" selected>---</option>
-            <option value="PRIMARY">PRIMARY</option>
-            <option value="UNIQUE">UNIQUE</option>
-            <option value="INDEX">INDEX</option>
-            <option value="FULLTEXT">FULLTEXT</option>
-            <option value="SPATIAL">SPATIAL</option>
-        </select>
-        <label for="autoIncCheckbox">Auto increment</label>
-        <input type="checkbox" id="autoIncCheckbox" name="autoIncCheckbox">
+        <div>
+            <label for="isNullCheckbox">Null?</label>
+            <input type="checkbox" id="isNullCheckbox" name="isNullCheckbox">
+        </div>
+        <div>
+            <label for="indexSelect">Index</label>
+            <select name="indexSelect" id="indexSelect">
+                <option value="" selected>---</option>
+                <option value="PRIMARY">PRIMARY</option>
+                <option value="UNIQUE">UNIQUE</option>
+                <option value="INDEX">INDEX</option>
+                <option value="FULLTEXT">FULLTEXT</option>
+                <option value="SPATIAL">SPATIAL</option>
+            </select>
+        </div>
+        <div>
+            <label for="autoIncCheckbox">Auto increment</label>
+            <input type="checkbox" id="autoIncCheckbox" name="autoIncCheckbox">
+        </div>
         <textarea name="commentInput" id="commentInput" placeholder="Comment..." cols="10" rows="5"></textarea>
-        <input type="submit" value="Add new column">
+        <input type="submit" value="Add col!">
     </form>
 
-    <form action="columnAction.php" method="POST">
+    <form action="columnAction.php" method="POST" id="columnActionForm">
         <select name="selectedColumn" id="selectedColumn">
             <option value="" selected>Select column name</option>
             <?php
@@ -224,16 +259,16 @@
             }
             ?>
         </select>
-
-        <div>
-            <label>
-                <input type="radio" name="action" value="rename" required> Rename
-            </label>
-            <label>
-                <input type="radio" name="action" value="delete" required> Delete
-            </label>
+        <div id="actionButtons">
+            <div>
+                <label for="renameRadio">Rename</label>
+                <input type="radio" name="action" value="rename" id="renameRadio" required>
+            </div>
+            <div>
+                <label for="deleteRadio">Delete</label>
+                <input type="radio" name="action" value="delete" id="deleteRadio" required>
+            </div>
         </div>
-
         <div id="renameField" style="display: none;">
             <input type="text" name="newColumnName" placeholder="New column name">
         </div>
@@ -249,59 +284,14 @@
         </div>
 
         <input type="submit" value="Submit!">
+        <hr>
     </form>
 
-    <a id="backAnchor" href="./connect.php">Back</a>
+    <a id="backAnchor" href="./connect.php">Esc</a>
+    </div>
     <script src="js/backAnchor.js"></script>
 
     <script>
-        const inputs = document.querySelectorAll("input:not([type='hidden']):not([type='submit']), select, textarea");
-        let index = 0;
-        let isEditing = false;
-
-        const table = document.querySelector("table");
-        const rows = table.querySelectorAll("tr");
-        const firstRowCells = rows[0].querySelectorAll("th");
-        const columnCount = firstRowCells.length - 2;
-
-        if (inputs.length) {
-            inputs[index].focus();
-
-            document.addEventListener("keydown", (e) => {
-                switch (e.key) {
-                    case "Control":
-                        isEditing = !isEditing;
-                        break;
-                    default:
-                        if (!isEditing) {
-                            switch (e.key) {
-                                case "ArrowDown":
-                                    index += columnCount;
-                                    break;
-                                case "ArrowUp":
-                                    index -= columnCount;
-                                    break;
-                                case "ArrowLeft":
-                                    index--;
-                                    break;
-                                case "ArrowRight":
-                                    index++;
-                                    break;
-                            }
-
-                            if (index >= inputs.length) {
-                                index = 0;
-                            } else if (index < 0) {
-                                index = inputs.length - 1;
-                            }
-
-                            inputs[index].focus();
-                        }
-                        break;
-                }
-            });
-        }
-
         const actionRadios = document.querySelectorAll("input[name='action']");
         const renameField = document.getElementById("renameField");
 

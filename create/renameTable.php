@@ -46,16 +46,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rename Table</title>
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/index.css">
+    <link rel="stylesheet" href="../styles/backAnchor.css">
+    <style>
+        #container form{
+            gap: 10px;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Rename Table: <?php echo htmlspecialchars($tableName); ?></h1>
-    <form action="" method="POST">
-        <label for="newTableName">New Table Name:</label>
-        <input type="text" id="newTableName" name="newTableName" required>
-        <input type="submit" value="Rename Table">
-    </form>
-    <a href="../connect.php">Back</a>
+    <div id="container">
+        <h1>Rename Table: <?php echo htmlspecialchars($tableName); ?></h1>
+        <form action="" method="POST">
+            <input type="text" id="newTableName" name="newTableName" placeholder="New table name..." required>
+            <input type="submit" value="Rename!">
+        </form>
+    </div>
+    <a id="backAnchor" href="../connect.php">Esc</a>
+    <script src="../js/backAnchor.js"></script>
 </body>
 
 </html>

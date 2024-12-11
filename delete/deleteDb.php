@@ -24,15 +24,14 @@
         $sql = "DROP DATABASE $dbname";
 
         if ($conn->query($sql)) {
-            echo "<h3>Database deleted successfully</h3>";
+            header("Location: ../userPage.php");
         } else {
             echo "Error while deleting database";
         }
-        echo "<a id='backAnchor' href='../index.php'></a>";
     }
     ?>
-    <a id="backAnchor" href="../userPage.php">Back</a>
-    <script src="js/backAnchor.js"></script>
+    <a id="backAnchor" href="../userPage.php">Esc</a>
+    <script src="../js/backAnchor.js"></script>
 </body>
 
 </html>

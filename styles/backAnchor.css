@@ -1,0 +1,18 @@
+#backAnchor{
+    text-decoration: none;
+    color: white;
+    border: 1px solid white;
+    padding: 5px;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    position: fixed;
+    left: 1%;
+    top: 1%;
+}
+
+#backAnchor:hover{
+    background-color: white;
+    border-color: black;
+    color: black;
+}

@@ -3,6 +3,7 @@
     height: 100vh;
     background-color: black;
     color: white;
+    gap: 20px;
 }
 
 div,
@@ -43,4 +44,8 @@ input[type="submit"]:hover {
     border-color: none;
     color: white;
     background-color: black;
+}
+
+hr{
+    width: 25vh;
 }

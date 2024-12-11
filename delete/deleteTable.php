@@ -25,14 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $sql = "DROP TABLE `" . $conn->real_escape_string($tableName) . "`";
         if ($conn->query($sql) === TRUE) {
-            header("Location ../connect.php");
+            echo "<script>window.location.href = '../connect.php';</script>";
         } else {
             echo "<p>Error deleting table: $conn->error</p>";
         }
 
         $conn->close();
     } else {
-        echo "<p>Table deletion canceled.</p>";
+        header("Location: ../connect.php");
     }
 }
 ?>
@@ -44,16 +44,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delete Table</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/index.css">
 </head>
 
 <body>
-    <h1>Delete Table: <?php echo htmlspecialchars($tableName); ?></h1>
-    <p>Are you sure you want to delete this table? This action cannot be undone.</p>
-    <form action="" method="POST">
-        <button type="submit" name="confirm" value="yes">Yes, Delete</button>
-        <button type="submit" name="confirm" value="no">Cancel</button>
-    </form>
-    <a href="../connect.php">Back</a>
+    <div id="container">
+        <h1>Delete Table: <?php echo htmlspecialchars($tableName); ?></h1>
+        <p>Are you sure you want to delete this table? This action cannot be undone.</p>
+        <form action="" method="POST">
+            <button type="submit" name="confirm" value="yes">Yes, Delete</button>
+            <button type="submit" name="confirm" value="no">Cancel</button>
+        </form>
+        <a id="backAnchor" href="../connect.php">Esc</a>
+    </div>
 </body>
 
 </html>

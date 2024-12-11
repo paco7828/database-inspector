@@ -58,14 +58,25 @@
             }
 
             if (!empty($indexKey)) {
-                $sql .= match ($indexKey) {
-                    'PRIMARY' => ", ADD PRIMARY KEY (`$columnName`)",
-                    'UNIQUE' => ", ADD UNIQUE KEY (`$columnName`)",
-                    'INDEX' => ", ADD INDEX `$columnName` (`$columnName`)",
-                    'FULLTEXT' => ", ADD FULLTEXT (`$columnName`)",
-                    'SPATIAL' => ", ADD SPATIAL INDEX `$columnName` (`$columnName`)",
-                    default => ''
-                };
+                switch ($indexKey) {
+                    case 'PRIMARY':
+                        $sql .= ", ADD PRIMARY KEY (`$columnName`)";
+                        break;
+                    case 'UNIQUE':
+                        $sql .= ", ADD UNIQUE KEY (`$columnName`)";
+                        break;
+                    case 'INDEX':
+                        $sql .= ", ADD INDEX `$columnName` (`$columnName`)";
+                        break;
+                    case 'FULLTEXT':
+                        $sql .= ", ADD FULLTEXT (`$columnName`)";
+                        break;
+                    case 'SPATIAL':
+                        $sql .= ", ADD SPATIAL INDEX `$columnName` (`$columnName`)";
+                        break;
+                    default:
+                        break;
+                }
             }
 
             if ($conn->query($sql)) {
@@ -73,7 +84,7 @@
             } else {
                 echo "Error in query: $conn->error";
                 echo "<br><pre>$sql</pre>";
-                echo "<a id='backAnchor' href='../showTableDetails.php'>Back</a>";
+                echo "<a id='backAnchor' href='../showTableDetails.php'>Esc</a>";
             }
         } else {
             die("Column name and type are required.");
@@ -82,7 +93,7 @@
 
     ?>
 
-    <script src="js/backAnchor.js"></script>
+    <script src="../js/backAnchor.js"></script>
 </body>
 
 </html>

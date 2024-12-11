@@ -36,11 +36,11 @@
     }
 
     if ($showBackLink) {
-        echo "<br><a href='../showTableDetails.php'>Back</a>";
+        echo "<br><a id='backAnchor' href='../showTableDetails.php'>Esc</a>";
     }
     ?>
 
-    <script src="js/backAnchor.js"></script>
+    <script src="../js/backAnchor.js"></script>
 </body>
 
 </html>

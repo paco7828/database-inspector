@@ -6,19 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Available tables</title>
     <link rel="stylesheet" href="styles/style.css">
-    <style>
-        #container {
-            text-align: center;
-            margin-top: 15%;
-        }
-
-        #tablesDiv {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="stylesheet" href="styles/radio.css">
+    <link rel="stylesheet" href="styles/backAnchor.css">
 </head>
 
 <body>
@@ -68,21 +58,24 @@
 
         echo "  </select>
                   <div id='actionButtons'>
-                      <label>
-                          <input type='radio' name='action' value='connect' required> Connect to table
-                      </label>
-                      <label>
-                          <input type='radio' name='action' value='rename'> Rename table
-                      </label>
-                      <label>
-                          <input type='radio' name='action' value='delete'> Delete table
-                      </label>
+                    <div>
+                        <label for='connectRadio'>Connect to table</label>
+                        <input id='connectRadio' type='radio' name='action' value='connect' required>
+                    </div>
+                    <div>
+                        <label for='renameRadio'>Rename table</label>
+                        <input id='renameRadio' type='radio' name='action' value='rename'>
+                    </div>
+                    <div>
+                        <label for='deleteRadio'>Delete table</label>
+                        <input id='deleteRadio' type='radio' name='action' value='delete'>
+                    </div>
                   </div>
                   <input type='submit' value='Submit'>
               </form>
               </div>";
         ?>
-        <a id='backAnchor' href='./userPage.php'>Back</a>
+        <a id='backAnchor' href='./userPage.php'>Esc</a>
         <script src="js/backAnchor.js"></script>
         <?php
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -105,49 +98,6 @@
             }
         }
         ?>
-
-        <!-- <script> 
-            document.addEventListener("DOMContentLoaded", () => {
-                const tableBtns = document.querySelectorAll("input[type='submit']");
-                let index = 0;
-                highlight(index);
-
-                document.addEventListener("keydown", (e) => {
-                    switch (e.key) {
-                        case "ArrowRight":
-                            index++;
-                            break;
-                        case "ArrowLeft":
-                            index--;
-                            break;
-                        case "Enter":
-                            tableBtns[index].form.submit();
-                            break;
-                    }
-
-                    if (index < 0) {
-                        index = tableBtns.length - 1;
-                    } else if (index > tableBtns.length - 1) {
-                        index = 0;
-                    }
-
-                    highlight(index);
-                });
-
-                function highlight(index) {
-                    let colors = ["white", "green"];
-
-                    tableBtns.forEach(btn => {
-                        btn.style.color = "";
-                        btn.style.backgroundColor = "";
-                    });
-
-                    tableBtns[index].style.color = colors[0];
-                    tableBtns[index].style.backgroundColor = colors[1];
-                }
-            });
-        </script>
-        -->
     </div>
 </body>
 
